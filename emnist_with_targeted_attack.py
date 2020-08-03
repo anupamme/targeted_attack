@@ -237,7 +237,7 @@ def main(argv):
   example_dataset = preprocess(
       emnist_train.create_tf_dataset_for_client(emnist_train.client_ids[0]))
   input_spec = example_dataset.element_spec
-
+  print('model_input_spec ', str(input_spec))
   def model_fn():
     keras_model = create_keras_model()
     return tff.learning.from_keras_model(
