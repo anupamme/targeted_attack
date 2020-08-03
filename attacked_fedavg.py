@@ -412,7 +412,7 @@ class DummyClientComputation(tff.learning.framework.ClientDeltaFn):
         ))
 
 def build_robust_federated_aggregation_process(model_fn,
-                                               num_communication_passes=5,
+                                               num_passes=5,
                                                tolerance=1e-6):
   """Builds the TFF computations for robust federated aggregation using the RFA Algorithm.
 
