@@ -18,9 +18,9 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_federated as tff
 
-from tensorflow_federated.python.common_libs import py_typecheck
-from tensorflow_federated.python.research.robust_aggregation import robust_federated_aggregation as rfa
-from tensorflow_federated.python.tensorflow_libs import tensor_utils
+import py_typecheck
+import robust_federated_aggregation as rfa
+import tensor_utils
 
 DIM = 500
 NUM_DATA_POINTS = 10
