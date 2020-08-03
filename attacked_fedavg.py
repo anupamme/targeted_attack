@@ -42,6 +42,7 @@ import tensor_utils
 import py_typecheck
 import robust_federated_aggregation as rfa
 
+DIM = 500
 
 @attr.s(eq=False, frozen=True)
 class ClientOutput(object):
