@@ -42,8 +42,6 @@ import tensor_utils
 import py_typecheck
 import robust_federated_aggregation as rfa
 
-DIM = 784
-
 @attr.s(eq=False, frozen=True)
 class ClientOutput(object):
   """Structure for outputs returned from clients during federated optimization.
@@ -358,7 +356,7 @@ class DummyClientComputation(tff.learning.framework.ClientDeltaFn):
   Designed to mimic the class `ClientFedAvg` from federated_averaging.py
   """
 
-  def __init__(self, model, client_weight_fn=None):
+  def __init__(self, model, input_spec, client_weight_fn=None):
     """Creates the client computation for Federated Averaging.
 
     Args:
@@ -367,6 +365,7 @@ class DummyClientComputation(tff.learning.framework.ClientDeltaFn):
     """
     del client_weight_fn
     self._model = tff.learning.framework.enhance(model)
+    self._input_spec = input_spec
     py_typecheck.check_type(self._model, tff.learning.framework.EnhancedModel)
     self._client_weight_fn = None
 
@@ -394,7 +393,7 @@ class DummyClientComputation(tff.learning.framework.ClientDeltaFn):
     num_examples_sum = dataset.reduce(
         initial_state=tf.constant(0), reduce_func=reduce_fn_num_examples)
     example_vector_sum = dataset.reduce(
-        initial_state=tf.zeros((DIM, 1)), reduce_func=reduce_fn_dataset_mean)
+        initial_state=tf.zeros((self._input_spec, 1)), reduce_func=reduce_fn_dataset_mean)
 
     # create a list with the same structure and type as model.trainable
     # containing a mean of all the examples in the local dataset. Note: this
@@ -413,6 +412,7 @@ class DummyClientComputation(tff.learning.framework.ClientDeltaFn):
         ))
 
 def build_robust_federated_aggregation_process(model_fn,
+                                               input_spec,
                                                num_passes=5,
                                                tolerance=1e-6):
   """Builds the TFF computations for robust federated aggregation using the RFA Algorithm.
@@ -431,7 +431,7 @@ def build_robust_federated_aggregation_process(model_fn,
   server_optimizer_fn = lambda: tf.keras.optimizers.SGD(learning_rate=1.0)
   
   def client_fed_avg(model_fn):
-    return DummyClientComputation(model_fn(), client_weight_fn=None)
+    return DummyClientComputation(model_fn(), input_spec, client_weight_fn=None)
   
   # build throwaway model simply to infer types
   with tf.Graph().as_default():
