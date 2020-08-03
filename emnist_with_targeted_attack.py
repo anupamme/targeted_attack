@@ -266,7 +266,7 @@ def main(argv):
       mul_factor=FLAGS.mul_factor,
       num_clients=FLAGS.num_clients_per_round)
 
-  iterative_process = attacked_fedavg.build_robust_federated_aggregation_process(model_fn, input_spec)
+  iterative_process = attacked_fedavg.build_robust_federated_aggregation_process(model_fn, 784)
 #  iterative_process = attacked_fedavg.build_federated_averaging_process_attacked(
 #      model_fn=model_fn,
 #      stateful_delta_aggregate_fn=aggregation_function,
